@@ -22,7 +22,9 @@ def _get_args():
             description=_DESCRIPTION)
 
     parser.add_argument(
-        'playlist_id',
+        '-p', '--playlist-id',
+        action='append',
+        default=[],
         help="Playlist ID")
 
     parser.add_argument(
@@ -41,9 +43,16 @@ def _main():
     args = _get_args()
     ytad.config.log.configure(args.verbose)
 
+    assert \
+        len(args.playlist_id) > 0, \
+        "Please provide at least one playlist."
+
     cm = ytad.client_manager.get_client_manager()
     d = ytad.download.Download(cm)
-    d.check_and_download(args.playlist_id, download_path=args.download_path)
+
+    for playlist_id in args.playlist_id:
+        _LOGGER.info("Processing playlist: [{}]".format(playlist_id))
+        d.check_and_download(playlist_id, download_path=args.download_path)
 
 if __name__ == '__main__':
     _main()

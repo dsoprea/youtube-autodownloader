@@ -1,7 +1,5 @@
 #!/usr/bin/env python2.7
 
-from __future__ import unicode_literals
-
 import os
 import sys
 _APP_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
@@ -9,14 +7,10 @@ sys.path.insert(0, _APP_PATH)
 
 import logging
 import argparse
-import time
-import math
-
-import youtube_dl
 
 import ytad.config.log
+import ytad.download
 import ytad.client_manager
-import ytad.poll
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -32,8 +26,8 @@ def _get_args():
         help="Playlist ID")
 
     parser.add_argument(
-        'download_path',
-        help="Local download path")
+        '-dp', '--download-path',
+        help="Local download path. Omit to update but not download.")
 
     parser.add_argument(
         '-v', '--verbose',
@@ -43,78 +37,13 @@ def _get_args():
     args = parser.parse_args()
     return args
 
-def _download(download_path, video_id, title):
-    """Download the video. youtube-dl will automatically resume any unfinished
-    downloads.
-    """
-
-    print(title)
-    print("- ID: {}".format(video_id))
-
-    original_filenames = os.listdir(download_path)
-
-    filename = "%(upload_date)s - %(title)s (%(id)s).%(ext)s"
-    filepath = os.path.join(download_path, filename)
-
-    # By default, the mtime is set to the publish-date and confuses
-    # absolutely everyone.
-    options = {
-        'quiet': True,
-        'updatetime': False,
-        'outtmpl': filepath,
-    }
-
-    start_epoch = time.time()
-
-    with youtube_dl.YoutubeDL(options) as ydl:
-        url = 'https://www.youtube.com/watch?v={}'.format(video_id)
-        ydl.download([url])
-
-    duration_s = int(math.ceil(time.time() - start_epoch))
-
-    print("- Download time: {}s".format(duration_s))
-
-    current_filenames = os.listdir(download_path)
-    new_filenames_s = set(current_filenames) - set(original_filenames)
-
-    found = None
-    for filename in new_filenames_s:
-        if video_id in filename:
-            found = filename
-            break
-
-    assert \
-        found is not None, \
-        "Could not find downloaded video: [{}]".format(video_id)
-
-    filename = found
-
-    print("- Filename: {}".format(filename))
-
-    filepath = os.path.join(download_path, filename)
-    s = os.stat(filepath)
-
-    print("- Size: {:.1f}M".format(s.st_size / 1024.0 / 1024.0))
-    print('')
-
-    return filepath
-
 def _main():
     args = _get_args()
     ytad.config.log.configure(args.verbose)
 
-    if os.path.exists(args.download_path) is False:
-        os.makedirs(args.download_path)
-
     cm = ytad.client_manager.get_client_manager()
-
-    p = ytad.poll.Poll(cm, args.playlist_id)
-    with p.new_songs() as new_songs:
-        for song_identity in new_songs:
-            _download(
-                args.download_path,
-                song_identity.video_id,
-                song_identity.title)
+    d = ytad.download.Download(cm)
+    d.check_and_download(args.playlist_id, download_path=args.download_path)
 
 if __name__ == '__main__':
     _main()

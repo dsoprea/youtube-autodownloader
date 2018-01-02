@@ -1,3 +1,2 @@
 - Finish documentation.
-- Be able to pass a list of playlists. This will prevent concurrency issues in most cases.
 - Add file-locking to GAA.

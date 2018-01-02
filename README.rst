@@ -1,0 +1,1 @@
+ytad/resources/README.rst

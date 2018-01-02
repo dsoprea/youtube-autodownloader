@@ -1,0 +1,3 @@
+include ytad/resources/README.rst
+include ytad/resources/requirements.txt
+include ytad/resources/version.txt

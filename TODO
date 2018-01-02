@@ -1,0 +1,2 @@
+- Be able to create the initial persistence without having to download.
+- Be able to pass a list of playlists. This will prevent concurrency issues in most cases.

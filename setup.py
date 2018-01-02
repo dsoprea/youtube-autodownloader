@@ -37,6 +37,8 @@ setuptools.setup(
         ],
     },
     scripts=[
+        'ytad/resources/scripts/ytad_autodownload',
+        'ytad/resources/scripts/ytad_search_playlists',
     ],
     install_requires=_REQUIREMENTS,
 )

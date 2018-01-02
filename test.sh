@@ -2,4 +2,6 @@
 
 export GAA_GOOGLE_API_AUTHORIZATION_FILEPATH=/tmp/.google_api_auth
 
-nosetests -s -v
+rm -f "${GAA_GOOGLE_API_AUTHORIZATION_FILEPATH}"
+
+nosetests -s -v $*

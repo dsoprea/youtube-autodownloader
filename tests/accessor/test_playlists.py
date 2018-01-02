@@ -14,3 +14,9 @@ class TestPlaylists(unittest.TestCase):
 
         items = p.list_mine()
         items = list(items)
+
+    def test_list_mine__return_content_details(self):
+        p = ytad.accessor.playlists.Playlists(self.__cm)
+
+        items = p.list_mine(return_content_details=True)
+        items = list(items)

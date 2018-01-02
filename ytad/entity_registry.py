@@ -1,10 +1,14 @@
 import contextlib
 
-import ytad.entity.playlist_response
+import ytad.entity.playlist_list_response
+import ytad.entity.playlist_item_list_response
 
 KIND_MAP = {
     'youtube#playlistListResponse':
-        ytad.entity.playlist_response.PlaylistResponse,
+        ytad.entity.playlist_list_response.PlaylistListResponse,
+
+    'youtube#playlistItemListResponse':
+        ytad.entity.playlist_item_list_response.PlaylistItemListResponse,
 }
 
 def factory(data):

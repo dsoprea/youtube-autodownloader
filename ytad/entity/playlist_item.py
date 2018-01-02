@@ -3,7 +3,7 @@ import dateutil.parser
 import ytad.entity._entity_base
 
 
-class Playlist(ytad.entity._entity_base.EntityBase):
+class PlaylistItem(ytad.entity._entity_base.EntityBase):
     @property
     def id(self):
         return self.data['id']
@@ -21,14 +21,8 @@ class Playlist(ytad.entity._entity_base.EntityBase):
         return dateutil.parser.parse(self.data['snippet']['publishedAt'])
 
     @property
-    def tags(self):
-        return self.data['snippet']['tags']
-
-    @property
-    def item_count(self):
-        """Only available when the "contentDetails" part is requested."""
-
-        return self.data['contentDetails']['itemCount']
+    def video_id(self):
+        return self.data['snippet']['resourceId']['videoId']
 
     def __str__(self):
-        return "Playlist<ID=[{}] TITLE=[{}]>".format(self.id, self.title)
+        return "PlaylistItem<ID=[{}] TITLE=[{}]>".format(self.id, self.title)

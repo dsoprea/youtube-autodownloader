@@ -10,7 +10,7 @@ class TestPlaylists(unittest.TestCase):
         self.__cm = ytad.client_manager.get_client_manager()
         super(TestPlaylists, self).__init__(*args, **kwargs)
 
-    def __get_first_playlist_name(self):
+    def __get_first_playlist(self):
         try:
             return self.__first_playlist_item
         except AttributeError:
@@ -25,7 +25,7 @@ class TestPlaylists(unittest.TestCase):
         return self.__first_playlist_item
 
     def test_find_all_in_mine(self):
-        existing_item = self.__get_first_playlist_name()
+        existing_item = self.__get_first_playlist()
 
         p = ytad.helper.playlists.Playlists(self.__cm)
 
@@ -35,7 +35,7 @@ class TestPlaylists(unittest.TestCase):
         self.assertTrue(len(items) > 0)
 
     def test_find_in_mine(self):
-        existing_item = self.__get_first_playlist_name()
+        existing_item = self.__get_first_playlist()
 
         p = ytad.helper.playlists.Playlists(self.__cm)
 

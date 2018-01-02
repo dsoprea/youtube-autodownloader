@@ -1,6 +1,7 @@
 import logging
 
 import ytad.entity_registry
+import ytad.pager
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -10,39 +11,25 @@ class Playlists(object):
         self.__cm = cm
 
     @ytad.entity_registry.entity_response
-    def _list_mine(self, **kwargs):
+    def _list_mine(self, parts=['id', 'snippet'], **kwargs):
         client = self.__cm.get_client()
 
         response = \
             client.playlists().list(
                 mine=True,
-                part='id,snippet',
+                part=','.join(parts),
                 **kwargs)
 
         return response
 
-    def list_mine(self):
-        page_token = None
-        result_counter = None
-        while 1:
-            kwargs = {}
-            if page_token is not None:
-                kwargs['pageToken'] = page_token
+    def list_mine(self, return_content_details=False, **kwargs):
+        if return_content_details is True:
+            kwargs['parts'] = ['id', 'snippet', 'contentDetails']
+
+        def cb(**kwargs2):
+            kwargs.update(kwargs2)
 
             response = self._list_mine(**kwargs)
+            return response
 
-            items = response.items
-            items = list(items)
-
-            if result_counter is None:
-                result_counter = response.total_results
-
-            result_counter -= len(items)
-
-            for item in items:
-                yield item
-
-            if result_counter <= 0:
-                break
-
-            page_token = response.next_page_token
+        return ytad.pager.all_items_gen(cb)

@@ -1,2 +1,5 @@
-- Finish documentation.
-- Add file-locking to GAA.
+- Update to allow the user to specify a playlist either by ID or name. If using a name, take the first found.
+  - It just looks nicer.
+
+- Allow the directory-path to be a template, and allow the playlist-name to be replaced into it.
+- Need to be able to add public playlists, too. Allow the search to default to this but to allow for a "--mine" parameter.

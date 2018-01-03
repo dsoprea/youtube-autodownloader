@@ -11,6 +11,7 @@ Features
 - The state is recorded for each playlist during each call. This is how the differences are calculated.
 - Uses `python-googleautoauth <https://github.com/dsoprea/python-googleautoauth>`_ for authentication.
 - Manages multiple instances being run concurrently.
+- Designed to be scheduled and to print information that could be reported via email.
 
 
 Usage

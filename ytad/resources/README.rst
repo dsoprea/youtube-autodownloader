@@ -21,10 +21,10 @@ Since YouTube does not enforce uniqueness for playlist names, you are required t
 To find the playlist name, run::
 
     $ ytad_search_playlists Animals
-PLxaR7YEkaI0xop_lzMT6BxAPGacWvmEih
+    PLxaR7YEkaI0xop_lzMT6BxAPGacWvmEih
 
     $ ytad_search_playlists Special
-PLxaR7YEkaI0yLK521mTCd4kqHr1gs86gE
+    PLxaR7YEkaI0yLK521mTCd4kqHr1gs86gE
 
 Now, you may check for new videos and download ("-p" is a playlist-ID, "-dp" is the download-path)::
 

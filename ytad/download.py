@@ -26,53 +26,78 @@ class Download(object):
         filename = "%(upload_date)s - %(title)s (%(id)s).%(ext)s"
         filepath = os.path.join(download_path, filename)
 
-        # By default, the mtime is set to the publish-date and confuses
-        # absolutely everyone.
-        options = {
-            'quiet': True,
-            'updatetime': False,
-            'outtmpl': filepath,
-        }
+        marker_filename = '.' + video_id + '.marker'
+        marker_filepath = os.path.join(download_path, marker_filename)
 
-        start_epoch = time.time()
+        if os.path.exists(marker_filepath) is True:
+            s = os.stat(marker_filepath)
+            age_s = int(time.time() - s.st_mtime)
 
-        with youtube_dl.YoutubeDL(options) as ydl:
-            url = 'https://www.youtube.com/watch?v={}'.format(video_id)
-            ydl.download([url])
+            if age_s < 10 * 60:
+                print("- SKIPPING! It may be downloading in a separate "
+                      "process.")
 
-        if print_output is True:
-            duration_s = int(math.ceil(time.time() - start_epoch))
-            print("- Download time: {}s".format(duration_s))
+                return
 
-            # youtube-dl has some options to print JSON info, which should
-            # presumably include a filename, but they don't work and/or aren't
-            # sufficient.
+            os.remove(marker_filepath)
 
-            filenames = os.listdir(download_path)
+        _LOGGER.debug("Writing download marker: [{}]".format(marker_filepath))
+        with open(marker_filepath, 'w'):
+            pass
 
-            found = None
-            for i, filename in enumerate(filenames):
-                if filename[0] == '.':
-                    continue
+        try:
+            # By default, the mtime is set to the publish-date and confuses
+            # absolutely everyone.
+            options = {
+                'quiet': True,
+                'updatetime': False,
+                'outtmpl': filepath,
+            }
 
-                if video_id in filename:
-                    found = filename
-                    break
+            start_epoch = time.time()
 
-            if found is None:
-                for filename in sorted(os.listdir(download_path)):
-                    _LOGGER.warning("FILE IN OUTPUT PATH: [{}]".format(filename))
+            with youtube_dl.YoutubeDL(options) as ydl:
+                url = 'https://www.youtube.com/watch?v={}'.format(video_id)
+                ydl.download([url])
 
-                raise Exception("Could not find downloaded video: [{}]".format(video_id))
+            if print_output is True:
+                duration_s = int(math.ceil(time.time() - start_epoch))
+                print("- Download time: {}s".format(duration_s))
 
-            filename = found
+                # youtube-dl has some options to print JSON info, which should
+                # presumably include a filename, but they don't work and/or aren't
+                # sufficient.
 
-            print("- Filename: {}".format(filename))
+                filenames = os.listdir(download_path)
 
-            filepath = os.path.join(download_path, filename)
-            s = os.stat(filepath)
+                found = None
+                for i, filename in enumerate(filenames):
+                    if filename[0] == '.':
+                        continue
 
-            print("- Size: {:.1f}M".format(s.st_size / 1024.0 / 1024.0))
+                    if video_id in filename:
+                        found = filename
+                        break
+
+                if found is None:
+                    for filename in sorted(os.listdir(download_path)):
+                        _LOGGER.warning("FILE IN OUTPUT PATH: [{}]".format(filename))
+
+                    raise Exception("Could not find downloaded video: [{}]".format(video_id))
+
+                filename = found
+
+                print("- Filename: {}".format(filename))
+
+                filepath = os.path.join(download_path, filename)
+                s = os.stat(filepath)
+
+                print("- Size: {:.1f}M".format(s.st_size / 1024.0 / 1024.0))
+        finally:
+            _LOGGER.debug("Removing download marker: [{}]".format(
+                          marker_filepath))
+
+            os.remove(marker_filepath)
 
         return filepath
 

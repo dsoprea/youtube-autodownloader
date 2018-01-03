@@ -7,11 +7,10 @@ This tool knows how to poll for changes to playlist(s) and to then download the 
 Features
 ========
 
-- Can provide more than one playlist.
+- More than one playlist can be provided.
 - The state is recorded for each playlist during each call. This is how the differences are calculated.
 - Uses `python-googleautoauth <https://github.com/dsoprea/python-googleautoauth>`_ for authentication.
-- Manages multiple instances being run concurrently.
-- Designed to be scheduled and to print information that could be reported via email.
+- Will gracefully accommodate multiple instances being run concurrently.
 
 
 Usage
@@ -19,7 +18,7 @@ Usage
 
 Since YouTube does not enforce uniqueness for playlist names, you are required to provide playlist IDs rather than names.
 
-To find the playlist name, run::
+Example of finding a playlist ID using a playlist name::
 
     $ ytad_search_playlists Animals
     PLxaR7YEkaI0xop_lzMT6BxAPGacWvmEih
@@ -27,7 +26,7 @@ To find the playlist name, run::
     $ ytad_search_playlists Special
     PLxaR7YEkaI0yLK521mTCd4kqHr1gs86gE
 
-Now, you may check for new videos and download ("-p" is a playlist-ID, "-dp" is the download-path)::
+Example of checking for and downloading new videos ("-p" is a playlist-ID, "-dp" is the download-path)::
 
     $ ytad_autodownload -p PLxaR7YEkaI0yLK521mTCd4kqHr1gs86gE -dp "/storage/videos/$(date '+\%Y')/Special"
     Lion Vs Mongoose: Mongoose Fends Off Four Lions

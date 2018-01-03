@@ -33,3 +33,27 @@ class Playlists(object):
             return response
 
         return ytad.pager.all_items_gen(cb)
+
+    @ytad.entity_registry.entity_response
+    def _list_with_id(self, id, parts=['snippet']):
+        client = self.__cm.get_client()
+
+        response = \
+            client.playlists().list(
+                id=id,
+                part=','.join(parts))
+
+        return response
+
+    def get_with_id(self, id):
+        response = self._list_with_id(id)
+        playlists = list(response.items)
+
+        len_ = len(playlists)
+
+        assert \
+            0 < len_ < 2, \
+            "Exactly one playlist was not found: COUNT=({}) ID=[{}]".format(
+            len_, id)
+
+        return playlists[0]

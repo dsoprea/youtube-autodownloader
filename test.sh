@@ -1,7 +1,7 @@
 #!/bin/sh
 
-export GAA_GOOGLE_API_AUTHORIZATION_FILEPATH=/tmp/.google_api_auth
+export GAA_GOOGLE_API_AUTHORIZATION_REPO_PATH=/tmp/google_api_authorizations
 
-# rm -f "${GAA_GOOGLE_API_AUTHORIZATION_FILEPATH}"
+# rm -f "${GAA_GOOGLE_API_AUTHORIZATION_REPO_PATH}"
 
 nosetests -s -v $*

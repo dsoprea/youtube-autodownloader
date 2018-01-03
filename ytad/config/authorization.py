@@ -1,5 +1,3 @@
-DEFAULT_FILEPATH = '~/.ytad/token'
-
 API_SCOPES = [
     'https://www.googleapis.com/auth/youtube.readonly',
 ]

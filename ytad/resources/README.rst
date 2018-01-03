@@ -44,6 +44,16 @@ Example of checking for and downloading new videos ("-p" is a playlist-ID, "-dp"
     - Size: 3.1M
 
 
+Testing
+=======
+
+To run the tests::
+
+    $ ./test.sh
+
+The tests will require user interaction with the browser.
+
+
 Notes
 =====
 

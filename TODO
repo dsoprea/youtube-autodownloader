@@ -3,3 +3,5 @@
 
 - Allow the directory-path to be a template, and allow the playlist-name to be replaced into it.
 - Need to be able to add public playlists, too. Allow the search to default to this but to allow for a "--mine" parameter.
+
+- Add a command-line tool to do a manual preauth.

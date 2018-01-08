@@ -36,6 +36,18 @@ def _get_args():
         action='store_true',
         help="Increase verbosity")
 
+    parser.add_argument(
+        '-yu', '--youtube-username',
+        help="YouTube username (for download)")
+
+    parser.add_argument(
+        '-yp', '--youtube-password',
+        help="YouTube password (for download)")
+
+    parser.add_argument(
+        '-y2', '--youtube-twofactor',
+        help="YouTube two-factor authentication code (Google Authenticator)")
+
     args = parser.parse_args()
     return args
 
@@ -48,7 +60,11 @@ def _main():
         "Please provide at least one playlist."
 
     cm = ytad.client_manager.get_client_manager()
-    d = ytad.download.Download(cm)
+    d = ytad.download.Download(
+            cm, 
+            ytdl_username=args.youtube_username, 
+            ytdl_password=args.youtube_password,
+            ytdl_twofactor=args.youtube_twofactor)
 
     for playlist_id in args.playlist_id:
         _LOGGER.info("Processing playlist: [{}]".format(playlist_id))

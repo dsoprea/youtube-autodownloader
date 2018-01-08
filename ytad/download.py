@@ -15,8 +15,12 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class Download(object):
-    def __init__(self, cm):
+    def __init__(self, cm, ytdl_username=None, ytdl_password=None, ytdl_twofactor=None):
         self.__cm = cm
+
+        self.__username = os.environ.get('YTDL_USERNAME', ytdl_username)
+        self.__password = os.environ.get('YTDL_PASSWORD', ytdl_password)
+        self.__twofactor = os.environ.get('YTDL_TWOFACTOR', ytdl_twofactor)
 
     def _download_one(self, download_path, video_id, title, print_output=True):
         """Download the video. youtube-dl will automatically resume any unfinished
@@ -52,6 +56,9 @@ class Download(object):
                 'quiet': True,
                 'updatetime': False,
                 'outtmpl': filepath,
+                'username': self.__username,
+                'password': self.__password,
+                'twofactor': self.__twofactor,
             }
 
             start_epoch = time.time()

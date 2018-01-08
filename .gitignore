@@ -1,2 +1,5 @@
 /dist/
 /youtube_autodownloader.egg-info/
+
+*.pyc
+

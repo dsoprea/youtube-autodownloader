@@ -27,7 +27,7 @@ class Download(object):
         downloads.
         """
 
-        filename = "%(upload_date)s - %(title)s (%(id)s).%(ext)s"
+        filename = "%(upload_date)s - " + title + " (%(id)s).%(ext)s"
         filepath = os.path.join(download_path, filename)
 
         marker_filename = '.' + video_id + '.marker'
@@ -119,13 +119,25 @@ class Download(object):
         pa = None
         with p.new_songs() as new_songs:
             for song_identity in new_songs:
+                title = song_identity.title
+
+                # Prune extended characters.
+
+                i = 0
+                while i < len(title):
+                    if ord(title[i]) >= 0x80:
+                        title = title[:i] + title[i + 1:]
+                        continue
+
+                    i += 1
+
                 if print_output is True:
                     if pa is None:
                         pa = ytad.accessor.playlists.Playlists(self.__cm)
 
                     playlist = pa.get_with_id(playlist_id)
 
-                    print(song_identity.title)
+                    print(title)
                     print("- Playlist: {}".format(playlist.title))
                     print("- ID: {}".format(song_identity.video_id))
 
@@ -133,7 +145,7 @@ class Download(object):
                     self._download_one(
                         download_path,
                         song_identity.video_id,
-                        song_identity.title,
+                        title,
                         print_output=print_output)
 
                 if print_output is True:

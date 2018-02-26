@@ -65,7 +65,17 @@ class Download(object):
 
             with youtube_dl.YoutubeDL(options) as ydl:
                 url = 'https://www.youtube.com/watch?v={}'.format(video_id)
-                ydl.download([url])
+
+                try:
+                    ydl.download([url])
+                except:
+                    _LOGGER.exception("Could not download video. Skipping: "
+                                      "[{}] [{}]".format(title, video_id))
+
+                    print("Could not download video. Skipping: [{}] "
+                          "[{}]".format(title, video_id))
+
+                    return
 
             if print_output is True:
                 duration_s = int(math.ceil(time.time() - start_epoch))
@@ -88,9 +98,11 @@ class Download(object):
 
                 if found is None:
                     for filename in sorted(os.listdir(download_path)):
-                        _LOGGER.warning("FILE IN OUTPUT PATH: [{}]".format(filename))
+                        print("WARNING: FILE IN OUTPUT PATH: [{}]".format(filename))
 
-                    raise Exception("Could not find downloaded video: [{}]".format(video_id))
+                    raise Exception("Could not find downloaded video: [{}] "
+                                    "FILEPATH-TEMPLATE=[{}]".format(
+                                    video_id, filepath))
 
                 filename = found
 
@@ -125,7 +137,7 @@ class Download(object):
 
                 i = 0
                 while i < len(title):
-                    if ord(title[i]) >= 0x80:
+                    if ord(title[i]) >= 0x80 or title[i] == '/':
                         title = title[:i] + title[i + 1:]
                         continue
 

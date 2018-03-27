@@ -1,0 +1,31 @@
+#!/usr/bin/env python2.7
+
+import sys
+import subprocess
+
+import ytad.config.authorization
+
+def _main():
+    cmd = [
+        'gaa_authorize',
+        ytad.config.authorization.SERVICE_NAME,
+        ytad.config.authorization.SERVICE_VERSION,
+        ytad.config.authorization.GOOGLE_API_CLIENT_ID,
+        ytad.config.authorization.GOOGLE_API_CLIENT_SECRET,
+        '-u',
+    ]
+
+    for scope in ytad.config.authorization.API_SCOPES:
+        cmd += [
+            '--scope', scope,
+        ]
+
+    p = subprocess.Popen(cmd)
+    r = p.wait()
+
+    if r != 0:
+        print("Could not get URL.")
+        sys.exit(1)
+
+if __name__ == '__main__':
+    _main()

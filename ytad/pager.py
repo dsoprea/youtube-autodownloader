@@ -22,4 +22,7 @@ def all_items_gen(cb):
         if result_counter <= 0:
             break
 
-        page_token = response.next_page_token
+        try:
+            page_token = response.next_page_token
+        except KeyError:
+            break

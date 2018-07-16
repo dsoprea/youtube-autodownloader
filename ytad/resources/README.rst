@@ -56,6 +56,8 @@ Example of checking for and downloading new videos ("-p" is a playlist-ID, "-dp"
     - Filename: 20090426 - Slow loris loves getting tickled http -_bit.ly_14qLq8x (PZ5ACLVjYwM).webm
     - Size: 3.1M
 
+Once everything is working, you may scheduled it to be regularly executed (e.g. cron).
+
 
 Testing
 =======
